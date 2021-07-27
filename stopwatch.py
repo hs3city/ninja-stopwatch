@@ -1,6 +1,10 @@
 # Python program to illustrate a stop watch
 # using Tkinter
 #importing the required libraries
+
+# Based on https://www.geeksforgeeks.org/create-stopwatch-using-python/
+
+
 import tkinter as Tkinter
 from datetime import datetime
 import time
@@ -9,13 +13,22 @@ import threading
 
 class StopwatchServer(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
+        global label
         print('GET :D')
+        path = self.path
+        print(self.path)
 
+        if (path == '/start'):
+            Start(label)
+        elif (path == '/stop'):
+            Stop()
+        elif (path == '/reset'):
+            Reset(label)
         self.send_response(200)
         self.end_headers()
         message = "EHLO"
         self.wfile.write(bytes(message, "utf8"))
-        
+
 class ServerThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
@@ -36,28 +49,32 @@ def counter_label(label):
     def count():
         if running:
             global counter
-           
-            tt = time.time_ns() - start_time
-            string = str(tt)
-            display=string
-   
+            global start_time
+
+            tt = (time.time_ns() - start_time) // (1000 * 1000)
+
+            dt = datetime.utcfromtimestamp(tt // 1000)
+
+            display=dt.strftime('%H:%M:%S') + '.{:03d}'.format(tt % 1000)
+
             label['text']=display   # Or label.config(text=display)
-   
+
             # label.after(arg1, arg2) delays by 
             # first argument given in milliseconds
             # and then calls the function given as second argument.
             # Generally like here we need to call the 
             # function in which it is present repeatedly.
-            # Delays by 1000ms=1 seconds and call count again.
+            # Delays by 1ms and call count again.
             label.after(1, count) 
             counter += 1
-   
+
     # Triggering the start of the counter.
     count()     
    
 # start function of the stopwatch
 def Start(label):
     global running
+    global start_time
     running=True
     counter_label(label)
     start['state']='disabled'
@@ -72,24 +89,24 @@ def Stop():
     stop['state']='disabled'
     reset['state']='normal'
     running = False
-   
+
 # Reset function of the stopwatch
 def Reset(label):
     global counter
     counter=INIT
-   
+
     # If rest is pressed after pressing stop.
-    if running==False:      
+    if running==False:
         reset['state']='disabled'
         label['text']='Welcome!'
-   
+
     # If reset is pressed while the stopwatch is running.
-    else:               
+    else:
         label['text']='Starting...'
-   
+
 root = Tkinter.Tk()
 root.title("Stopwatch")
-   
+
 # Fixing the window size.
 root.minsize(width=250, height=70)
 label = Tkinter.Label(root, text="Welcome!", fg="black", font="Verdana 30 bold")
