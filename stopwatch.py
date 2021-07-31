@@ -1,10 +1,3 @@
-# Python program to illustrate a stop watch
-# using Tkinter
-#importing the required libraries
-
-# Based on https://www.geeksforgeeks.org/create-stopwatch-using-python/
-
-
 import tkinter as Tkinter
 from datetime import datetime
 import time
@@ -32,7 +25,7 @@ class StopwatchServer(http.server.BaseHTTPRequestHandler):
 class ServerThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-        self.is_server_running = False 
+        self.is_server_running = False
         self.daemon = True
 
     def run(self):
@@ -55,39 +48,33 @@ def counter_label(label):
 
             dt = datetime.utcfromtimestamp(tt // 1000)
 
-            display=dt.strftime('%H:%M:%S') + '.{:03d}'.format(tt % 1000)
+            display=dt.strftime('%M:%S') + '.{:03d}'.format(tt % 1000)
 
             label['text']=display   # Or label.config(text=display)
 
-            # label.after(arg1, arg2) delays by 
+            # label.after(arg1, arg2) delays by
             # first argument given in milliseconds
             # and then calls the function given as second argument.
-            # Generally like here we need to call the 
+            # Generally like here we need to call the
             # function in which it is present repeatedly.
             # Delays by 1ms and call count again.
-            label.after(1, count) 
+            label.after(1, count)
             counter += 1
 
     # Triggering the start of the counter.
-    count()     
-   
+    count()
+
 # start function of the stopwatch
 def Start(label):
     global running
     global start_time
     running=True
     counter_label(label)
-    start['state']='disabled'
-    stop['state']='normal'
-    reset['state']='normal'
     start_time = time.time_ns()
-   
+
 # Stop function of the stopwatch
 def Stop():
     global running
-    start['state']='normal'
-    stop['state']='disabled'
-    reset['state']='normal'
     running = False
 
 # Reset function of the stopwatch
@@ -105,20 +92,14 @@ def Reset(label):
         label['text']='Starting...'
 
 root = Tkinter.Tk()
+root.attributes("-fullscreen", True)
+root.configure(background="black")
 root.title("Stopwatch")
 
-# Fixing the window size.
-root.minsize(width=250, height=70)
-label = Tkinter.Label(root, text="Welcome!", fg="black", font="Verdana 30 bold")
-label.pack()
+label = Tkinter.Label(root, text="Welcome!", fg="red", bg="black", font="Verdana 240 bold")
+label.pack(expand=True)
 f = Tkinter.Frame(root)
-start = Tkinter.Button(f, text='Start', width=6, command=lambda:Start(label))
-stop = Tkinter.Button(f, text='Stop',width=6,state='disabled', command=Stop)
-reset = Tkinter.Button(f, text='Reset',width=6, state='disabled', command=lambda:Reset(label))
-f.pack(anchor = 'center',pady=5)
-start.pack(side="left")
-stop.pack(side ="left")
-reset.pack(side="left")
+
 server_thread = ServerThread()
 server_thread.start()
 root.mainloop()
