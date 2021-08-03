@@ -3,24 +3,27 @@ from datetime import datetime
 import time
 import http.server
 import threading
+from urllib.parse import urlsplit
 
 
 class StopwatchServer(http.server.BaseHTTPRequestHandler):
-    def do_GET(self):
+    def do_POST(self):
         global label
-        print("GET :D")
-        path = self.path
+        global running
         print(self.path)
+        url = urlsplit(self.path)
 
-        if path == "/start":
-            Start(label)
-        elif path == "/stop":
-            Stop()
-        elif path == "/reset":
+        if url.path == "/press":
+            if url.query == "id=1" and not running:
+                Start(label)
+            elif url.query == "id=2" and running:
+                Stop()
+        elif url.path == "/hold":
             Reset(label)
+
         self.send_response(200)
         self.end_headers()
-        message = "EHLO"
+        message = "ACK"
         self.wfile.write(bytes(message, "utf8"))
 
 
@@ -36,10 +39,7 @@ class ServerThread(threading.Thread):
         self.httpd.serve_forever()
 
 
-INIT = 0
-
-counter = INIT
-start_time = time.time_ns()
+start_time = None
 running = False
 
 
@@ -53,7 +53,7 @@ def counter_label(label):
 
             dt = datetime.utcfromtimestamp(tt // 1000)
 
-            display = dt.strftime("%M:%S") + ".{:03d}".format(tt % 1000)
+            display = dt.strftime("%M:%S") + ".{:02d}".format((tt % 1000) // 10)
 
             label["text"] = display  # Or label.config(text=display)
 
@@ -64,7 +64,6 @@ def counter_label(label):
             # function in which it is present repeatedly.
             # Delays by 1ms and call count again.
             label.after(1, count)
-            counter += 1
 
     # Triggering the start of the counter.
     count()
@@ -75,8 +74,8 @@ def Start(label):
     global running
     global start_time
     running = True
-    counter_label(label)
     start_time = time.time_ns()
+    counter_label(label)
 
 
 # Stop function of the stopwatch
@@ -87,17 +86,12 @@ def Stop():
 
 # Reset function of the stopwatch
 def Reset(label):
-    global counter
-    counter = INIT
+    global running
+    global start_time
+    running = False
 
     # If rest is pressed after pressing stop.
-    if running == False:
-        reset["state"] = "disabled"
-        label["text"] = "Welcome!"
-
-    # If reset is pressed while the stopwatch is running.
-    else:
-        label["text"] = "Starting..."
+    label["text"] = "00:00:00"
 
 
 root = Tkinter.Tk()
@@ -106,11 +100,12 @@ root.configure(background="black")
 root.title("Stopwatch")
 
 label = Tkinter.Label(
-    root, text="Welcome!", fg="red", bg="black", font="Verdana 240 bold"
+    root, text="00:00:00", fg="red", bg="black", font="Verdana 240 bold"
 )
 label.pack(expand=True)
 f = Tkinter.Frame(root)
 
 server_thread = ServerThread()
 server_thread.start()
+root.bind("q", lambda _: root.destroy())
 root.mainloop()
