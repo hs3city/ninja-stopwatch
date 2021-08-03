@@ -91,7 +91,7 @@ def Reset(label):
     running = False
 
     # If rest is pressed after pressing stop.
-    label["text"] = "00:00:00"
+    label["text"] = "00:00.00"
 
 
 root = Tkinter.Tk()
@@ -100,7 +100,7 @@ root.configure(background="black")
 root.title("Stopwatch")
 
 label = Tkinter.Label(
-    root, text="00:00:00", fg="red", bg="black", font="Verdana 240 bold"
+    root, text="00:00.00", fg="red", bg="black", font="Verdana 240 bold"
 )
 label.pack(expand=True)
 f = Tkinter.Frame(root)
