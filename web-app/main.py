@@ -5,8 +5,8 @@ import utime
 
 
 # Variables that force further actions such as start/stop/reset time
-button300ms = False
-button1000ms = False
+short_button = False
+long_button = False
 
 
 def get_template() -> str:
@@ -17,20 +17,20 @@ def get_template() -> str:
 
 
 def check_button_click(request):
-    global button300ms, button1000ms
+    global short_button, long_button
 
-    button300ms, button1000ms = False, False
+    short_button, long_button = False, False
 
-    led_on = "GET /?led=on" in request.decode("utf-8")
-    led_off = "GET /?led=off" in request.decode("utf-8")
+    press_start = "GET /?press=start" in request.decode("utf-8")
+    press_restart = "GET /?press=restart" in request.decode("utf-8")
 
-    if led_on:
+    if press_start:
         print("\nA SHORT click was recorded\n")
-        button300ms = True
+        short_button = True
 
-    elif led_off:
+    elif press_restart:
         print("\nA LONG click was recorded\n")
-        button1000ms = True
+        long_button = True
 
     print(f"Full request: {request.decode('utf-8')}\n")
 
@@ -61,13 +61,13 @@ def ap_mode(ssid, password):
         check_button_click(request)
 
         # Turn the LED on/off depending on which button was last pressed
-        if button300ms:
-            utime.sleep_ms(300)
-            led.value(1)
-
-        elif button1000ms:
-            utime.sleep_ms(1000)
+        if short_button:
             led.value(0)
+            utime.sleep_ms(300)
+
+        elif long_button:
+            led.value(1)
+            utime.sleep_ms(1000)
 
         response = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n" + get_template()
         client.send(response)
