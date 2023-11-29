@@ -3,18 +3,14 @@ import network
 import socket
 import utime
 
-
 # Variables that force further actions such as start/stop/reset time
 short_button = False
 long_button = False
 
-
 def get_template() -> str:
     with open("index.html", "r") as f:
         html = f.read()
-
     return html
-
 
 def check_button_click(request):
     global short_button, long_button
@@ -34,7 +30,6 @@ def check_button_click(request):
 
     print(f"Full request: {request.decode('utf-8')}\n")
 
-
 def ap_mode(ssid, password):
     ap = network.WLAN(network.AP_IF)
     ap.config(essid=ssid, password=password)
@@ -51,6 +46,10 @@ def ap_mode(ssid, password):
     s.listen(5)
 
     led = machine.Pin("LED", machine.Pin.OUT)
+    timer = machine.Pin(8, machine.Pin.OUT)
+
+    led.value(0)
+    timer.value(1)
 
     while True:
         client, addr = s.accept()
@@ -60,20 +59,24 @@ def ap_mode(ssid, password):
 
         check_button_click(request)
 
-        # Turn the LED on/off depending on which button was last pressed
+        # Start/stop the time
         if short_button:
+            timer.value(0)
             led.value(1)
             utime.sleep_ms(300)
             led.value(0)
+            timer.value(1)
 
+        # Reset the time
         elif long_button:
+            timer.value(0)
             led.value(1)
-            utime.sleep_ms(1000)
+            utime.sleep_ms(1600)
             led.value(0)
+            timer.value(1)
 
         response = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n" + get_template()
         client.send(response)
         client.close()
 
-
-ap_mode("pico", "password")
+ap_mode("ninja", "ninja123")
