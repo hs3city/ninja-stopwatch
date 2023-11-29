@@ -62,12 +62,14 @@ def ap_mode(ssid, password):
 
         # Turn the LED on/off depending on which button was last pressed
         if short_button:
-            led.value(0)
+            led.value(1)
             utime.sleep_ms(300)
+            led.value(0)
 
         elif long_button:
             led.value(1)
             utime.sleep_ms(1000)
+            led.value(0)
 
         response = "HTTP/1.1 200 OK\nContent-Type: text/html\n\n" + get_template()
         client.send(response)
