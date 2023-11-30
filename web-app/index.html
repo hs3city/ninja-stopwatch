@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;900&display=swap" rel="stylesheet">
+
+                <title>STOPWATCH</title>
+
+                <style>
+                    body {
+                        font-family: "Lato", sans-serif;
+                        margin: 0;
+                        padding: 0;
+                        background: linear-gradient(to right, #444, #000);
+                        height: 100%;
+                        color: #fff;
+                        -webkit-text-stroke-width: .5px;
+                        -webkit-text-stroke-color: black;
+                    }
+                    
+                    nav {
+                        position: relative;
+                        background: linear-gradient(to right, #333, #000);
+                        color: #fff;
+                        text-align: center;
+                        padding: 1em;
+                        font-size: 1rem;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                        letter-spacing: .2rem;
+                    }
+                    
+                    nav h1 {
+                        margin: 0;
+                        font-size: 2rem;
+                    }
+                    
+                    a {
+                    text-decoration: none;
+                    }
+                    
+                    .buttons-container {
+                        max-width: 600px;
+                        margin: 40px auto;
+                        margin-bottom: 25px;
+                        padding: 1px;
+                        border-radius: 10px;
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                    
+                    .buttons {
+                        margin-top: 25px;
+                    }
+                    
+                    .start-button,
+                    .reset-button {
+                        height: 60%;
+                        padding: 60px;
+                        flex: 1;
+                        margin: 25px;
+                        border: none;
+                        display: flex;
+                        justify-content: center;
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all .3s ease-in-out;
+                        color: gainsboro;
+                        border-radius: 5px;
+                        -webkit-text-stroke-width: 0;
+                    }
+                    
+                    .start-button {
+                        border: 1px solid #008000;
+                        background-color: #008000;
+                        box-shadow: 0px 0px 10px #000;
+                    }
+                    
+                    .start-button:hover {
+                        background-color: #00AA00;
+                        border-color: #00AA00;
+                        color: black;
+                        box-shadow: 0px 0px 15px #000;
+                    }
+                    
+                    .reset-button {
+                        border: 1px solid #990000;
+                        background-color: #990000;
+                        box-shadow: 0px 0px 10px #000;
+                    }
+                    
+                    .reset-button:hover {
+                        background-color: #c0392b;
+                        border-color: #c0392b;
+                        color: black;
+                        box-shadow: 0px 0px 15px #000;
+                    }
+
+                    footer {
+                        background: linear-gradient(to right, #333, #000);
+                        color: #ccc;
+                        text-align: center;
+                        padding: 1em;
+                        position: fixed;
+                        height: 3%;
+                        bottom: 0;
+                        width: 100%;
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                        box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+                        transform: translateX(-1%);
+                        -webkit-text-stroke-width: 0;
+                    }
+                    
+                    @media (max-width: 800px) {
+                    
+                        .start-button,
+                        .reset-button {
+                            max-width: 80%;
+                        }
+                    
+                        footer {
+                            transform: translateX(-3%);
+                        }
+                    }
+
+                </style>
+            </head>
+            <body>
+                <nav>
+                    <h1><i>STOPWATCH</i></h1>
+                </nav>
+
+                <div class="buttons-container">
+                    <div class="buttons" id="buttons">
+                        <a class="start-button" href="?press=start" id="start-button">
+                            <i>START/STOP</i>
+                        </a>
+                        <a class="reset-button" href="?press=restart" id="reset-button">
+                            <i>RESET</i>
+                        </a>
+                    </div>
+                </div>
+
+                <footer>
+                    &copy; 2023
+                </footer>
+            </body>
+            </html>
