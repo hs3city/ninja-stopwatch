@@ -1,7 +1,6 @@
-# ninja-stopwatch
+# Ninja Stopwatch
 
-Please use those libraries for ESP8266WIFI:
-https://github.com/esp8266/Arduino
+A big display for ninja competitions (think Ninja Warrior or Sasuke).
 
-For ESP8266 on Windows 10 following driver is required:
-https://www.arduined.eu/ch340-windows-10-driver-download/
+It uses 8 P10 HUB12 LED panels in a 4x2 grid to get a display of 128x32px
+(correspondingly 128x32cm in size).
